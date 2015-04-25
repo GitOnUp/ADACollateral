@@ -88,9 +88,9 @@ class Maze(object):
             return False
         if self.maze[y][x] == '#':
             return False
-        # This currently only checks for walls and terminals.  If you're adding other
+        # This currently only checks for open space and terminals.  If you're adding other
         # markings in the grid you may want to alter this.
-        return self.maze[y + dy][x + dx] in ['#', '<', '>']
+        return self.maze[y + dy][x + dx] in [' ', '<', '>']
 
     def solve(self):
         # TODO Implement me
