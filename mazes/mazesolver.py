@@ -32,6 +32,7 @@
 # Then open hints.txt.
 # m1.txt, m2.txt, and m3.txt are mazes that may help ferret out bugs.
 import sys
+import queue
 
 class Maze(object):
     def __init__(self, filename):
@@ -92,9 +93,35 @@ class Maze(object):
         # markings in the grid you may want to alter this.
         return self.maze[y + dy][x + dx] in [' ', '<', '>']
 
+    def canMovePrevious(self, y, x, dy, dx, previous):
+        if not self.canMove(y, x, dy, dx):
+            return False
+        return (y + dy, x + dx) not in previous
+
     def solve(self):
-        # TODO Implement me
-        self.printMaze()
+        paths = queue.Queue()
+        paths.put([self.start])
+        solution = None
+
+        while not paths.empty():
+            path = paths.get()
+            lastMove = path[-1]
+            for move in [(1,0), (-1,0), (0,1), (0,-1)]:
+                dy, dx = move
+                y, x = lastMove
+                if self.canMovePrevious(y, x, dy, dx, path):
+                    if self.maze[y + dy][x + dx] == '>':
+                        solution = path
+                        break
+                    newPath = path[:] + [(y + dy, x + dx)]
+                    paths.put(newPath)
+
+        if solution is not None:
+            for cell in solution:
+                y, x = cell
+                if self.maze[y][x] == ' ':
+                    self.maze[y][x] = '.'
+            self.printMaze()
 
     def printMaze(self):
         for line in self.maze:
