@@ -90,11 +90,31 @@ class Maze(object):
             return False
         # This currently only checks for open space and terminals.  If you're adding other
         # markings in the grid you may want to alter this.
-        return self.maze[y + dy][x + dx] in [' ', '<', '>']
+        return self.maze[y + dy][x + dx] in [' ']
 
     def solve(self):
-        # TODO Implement me
-        self.printMaze()
+        moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        stack = [(self.start, 0)] # last position, index of next move to try from there
+        while len(stack):
+            lastPosition, nextMove = stack[-1]
+            y, x = lastPosition
+            foundMove = False
+            for iMove in range(nextMove, len(moves)):
+                dy, dx = moves[iMove]
+                if self.maze[y + dy][x + dx] == '>':
+                    self.printMaze()
+                    return
+                if self.canMove(y, x, dy, dx):
+                    newY = y + dy
+                    newX = x + dx
+                    self.maze[newY][newX] = '.'
+                    stack[-1] = (lastPosition, iMove + 1)
+                    stack.append( ((newY, newX), 0) )
+                    foundMove = True
+                    break
+            if not foundMove:
+                self.maze[y][x] = ' '
+                stack = stack[:-1]
 
     def printMaze(self):
         for line in self.maze:
