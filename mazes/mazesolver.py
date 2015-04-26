@@ -100,12 +100,11 @@ class Maze(object):
 
     def solve(self):
         paths = queue.Queue()
-        paths.put([self.start])
+        paths.put( (set([self.start]), self.start) )
         solution = None
 
         while not paths.empty():
-            path = paths.get()
-            lastMove = path[-1]
+            path, lastMove = paths.get()
             for move in [(1,0), (-1,0), (0,1), (0,-1)]:
                 dy, dx = move
                 y, x = lastMove
@@ -113,8 +112,10 @@ class Maze(object):
                     if self.maze[y + dy][x + dx] == '>':
                         solution = path
                         break
-                    newPath = path[:] + [(y + dy, x + dx)]
-                    paths.put(newPath)
+                    newMove = (y + dy, x + dx)
+                    newPath = set(path)
+                    newPath.add(newMove)
+                    paths.put((newPath, newMove))
 
         if solution is not None:
             for cell in solution:
