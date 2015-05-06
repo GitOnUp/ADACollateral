@@ -102,7 +102,6 @@ class Maze(object):
         paths = queue.Queue()
         paths.put( (set([self.start]), self.start) )
         visited = set(self.start)
-        solution = None
 
         while not paths.empty():
             path, lastMove = paths.get()
@@ -111,21 +110,17 @@ class Maze(object):
                 y, x = lastMove
                 if self.canMovePrevious(y, x, dy, dx, visited):
                     if self.maze[y + dy][x + dx] == '>':
-                        solution = path
-                        break
+                        for cell in path:
+                            y, x = cell
+                            if self.maze[y][x] == ' ':
+                                self.maze[y][x] = '.'
+                        self.printMaze()
+                        return
                     newMove = (y + dy, x + dx)
                     newPath = set(path)
                     newPath.add(newMove)
                     paths.put((newPath, newMove))
                     visited.add(newMove)
-
-            if solution is not None:
-                for cell in solution:
-                    y, x = cell
-                    if self.maze[y][x] == ' ':
-                        self.maze[y][x] = '.'
-                self.printMaze()
-                return
 
     def printMaze(self):
         for line in self.maze:
