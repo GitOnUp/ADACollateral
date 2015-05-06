@@ -116,15 +116,14 @@ class Maze(object):
                     newPath = set(path)
                     newPath.add(newMove)
                     paths.put((newPath, newMove))
-            if solution is not None:
-                break
 
-        if solution is not None:
-            for cell in solution:
-                y, x = cell
-                if self.maze[y][x] == ' ':
-                    self.maze[y][x] = '.'
-            self.printMaze()
+            if solution is not None:
+                for cell in solution:
+                    y, x = cell
+                    if self.maze[y][x] == ' ':
+                        self.maze[y][x] = '.'
+                self.printMaze()
+                return
 
     def printMaze(self):
         for line in self.maze:
