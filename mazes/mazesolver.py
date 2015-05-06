@@ -116,6 +116,8 @@ class Maze(object):
                     newPath = set(path)
                     newPath.add(newMove)
                     paths.put((newPath, newMove))
+            if solution is not None:
+                break
 
         if solution is not None:
             for cell in solution:
